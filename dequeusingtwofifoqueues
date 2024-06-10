@@ -1,0 +1,55 @@
+from collections import deque
+
+class DequeUsingTwoQueues:
+    def __init__(self):
+        self.front_queue = deque()
+        self.back_queue = deque()
+    
+    def _balance_queues(self):
+        while len(self.front_queue) > len(self.back_queue) + 1:
+            self.back_queue.appendleft(self.front_queue.pop())
+        while len(self.back_queue) > len(self.front_queue):
+            self.front_queue.append(self.back_queue.popleft())
+    
+    def append(self, value):
+        self.back_queue.append(value)
+        self._balance_queues()
+    
+    def appendleft(self, value):
+        self.front_queue.appendleft(value)
+        self._balance_queues()
+    
+    def pop(self):
+        if not self.back_queue and not self.front_queue:
+            raise IndexError("pop from an empty deque")
+        if not self.back_queue:
+            return self.front_queue.pop()
+        if len(self.front_queue) >= len(self.back_queue):
+            return self.front_queue.pop()
+        else:
+            return self.back_queue.popleft()
+    
+    def popleft(self):
+        if not self.back_queue and not self.front_queue:
+            raise IndexError("pop from an empty deque")
+        if not self.front_queue:
+            return self.back_queue.popleft()
+        if len(self.front_queue) > len(self.back_queue):
+            return self.front_queue.popleft()
+        else:
+            return self.front_queue.popleft()
+    
+    def __len__(self):
+        return len(self.front_queue) + len(self.back_queue)
+    
+    def is_empty(self):
+        return not self.front_queue and not self.back_queue
+
+# Example usage:
+dq = DequeUsingTwoQueues()
+dq.append(1)
+dq.append(2)
+dq.appendleft(0)
+print(dq.pop())       # Output: 2
+print(dq.popleft())   # Output: 0
+print(dq.pop())       # Output: 1
