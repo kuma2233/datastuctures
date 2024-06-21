@@ -1,55 +1,70 @@
-from collections import deque
+import java.util.LinkedList;
+import java.util.Queue;
 
-class DequeUsingTwoQueues:
-    def __init__(self):
-        self.front_queue = deque()
-        self.back_queue = deque()
-    
-    def _balance_queues(self):
-        while len(self.front_queue) > len(self.back_queue) + 1:
-            self.back_queue.appendleft(self.front_queue.pop())
-        while len(self.back_queue) > len(self.front_queue):
-            self.front_queue.append(self.back_queue.popleft())
-    
-    def append(self, value):
-        self.back_queue.append(value)
-        self._balance_queues()
-    
-    def appendleft(self, value):
-        self.front_queue.appendleft(value)
-        self._balance_queues()
-    
-    def pop(self):
-        if not self.back_queue and not self.front_queue:
-            raise IndexError("pop from an empty deque")
-        if not self.back_queue:
-            return self.front_queue.pop()
-        if len(self.front_queue) >= len(self.back_queue):
-            return self.front_queue.pop()
-        else:
-            return self.back_queue.popleft()
-    
-    def popleft(self):
-        if not self.back_queue and not self.front_queue:
-            raise IndexError("pop from an empty deque")
-        if not self.front_queue:
-            return self.back_queue.popleft()
-        if len(self.front_queue) > len(self.back_queue):
-            return self.front_queue.popleft()
-        else:
-            return self.front_queue.popleft()
-    
-    def __len__(self):
-        return len(self.front_queue) + len(self.back_queue)
-    
-    def is_empty(self):
-        return not self.front_queue and not self.back_queue
+public class DequeUsingQueues<T> {
+    private Queue<T> queue1;
+    private Queue<T> queue2;
 
-# Example usage:
-dq = DequeUsingTwoQueues()
-dq.append(1)
-dq.append(2)
-dq.appendleft(0)
-print(dq.pop())       # Output: 2
-print(dq.popleft())   # Output: 0
-print(dq.pop())       # Output: 1
+    public DequeUsingQueues() {
+        this.queue1 = new LinkedList<>();
+        this.queue2 = new LinkedList<>();
+    }
+    public void addLast(T item) {
+        queue2.offer(item);
+    }
+    public void addFirst(T item) {
+        queue1.offer(item);
+    }
+    public T removeLast() {
+        if (queue2.isEmpty()) {
+            while (queue1.size() > 1) {
+                queue2.offer(queue1.poll());
+            }
+            return queue1.poll();
+        }
+        return queue2.poll();
+    }
+    public T removeFirst() {
+        if (queue1.isEmpty()) {
+            while (queue2.size() > 1) {
+                queue1.offer(queue2.poll());
+            }
+            return queue2.poll();
+        }
+        return queue1.poll();
+    }
+    public T peekFirst() {
+        if (queue1.isEmpty()) {
+            while (queue2.size() > 1) {
+                queue1.offer(queue2.poll());
+            }
+            return queue2.peek();
+        }
+        return queue1.peek();
+    }
+    public T peekLast() {
+        if (queue2.isEmpty()) {
+            while (queue1.size() > 1) {
+                queue2.offer(queue1.poll());
+            }
+            return queue1.peek();
+        }
+        return queue2.peek();
+    }
+
+    public boolean isEmpty() {
+        return queue1.isEmpty() && queue2.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        DequeUsingQueues<Integer> deque = new DequeUsingQueues<>();
+
+        deque.addLast(10);
+        deque.addFirst(20);
+        deque.addLast(30);
+
+        System.out.println(deque.removeFirst()); 
+        System.out.println(deque.removeLast()); 
+        System.out.println(deque.removeLast()); 
+    }
+}
