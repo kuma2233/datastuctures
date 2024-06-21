@@ -1,0 +1,74 @@
+public class CircularFIFOQueue<T> {
+    private T[] buffer;
+    private int front;
+    private int rear;
+    private int size;
+    private int capacity;
+
+   
+    public CircularFIFOQueue(int capacity) {
+        this.capacity = capacity;
+        this.buffer = (T[]) new Object[capacity];
+        this.front = 0;
+        this.rear = 0;
+        this.size = 0;
+    }
+
+    public void enqueue(T data) {
+        if (isFull()) {
+            throw new RuntimeException("Queue is full. Cannot enqueue.");
+        }
+        buffer[rear] = data;
+        rear = (rear + 1) % capacity;
+        size++;
+    }
+
+    public T dequeue() {
+        if (isEmpty()) {
+            throw new RuntimeException("Queue is empty. Cannot dequeue.");
+        }
+        T data = buffer[front];
+        buffer[front] = null; // Optional: Help garbage collection
+        front = (front + 1) % capacity;
+        size--;
+        return data;
+    }
+
+    public T peek() {
+        if (isEmpty()) {
+            throw new RuntimeException("Queue is empty. Cannot peek.");
+        }
+        return buffer[front];
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean isFull() {
+        return size == capacity;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public static void main(String[] args) {
+        CircularFIFOQueue<Integer> queue = new CircularFIFOQueue<>(3);
+
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        System.out.println("Dequeued: " + queue.dequeue());
+
+        queue.enqueue(4);
+
+        System.out.println("Front element: " + queue.peek());
+        System.out.println("Queue size: " + queue.size()); 
+
+        while (!queue.isEmpty()) {
+            System.out.println("Dequeued: " + queue.dequeue());
+        }
+    }
+}
