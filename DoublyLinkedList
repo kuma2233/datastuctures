@@ -1,0 +1,128 @@
+public class DoublyLinkedList<T> {
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+
+    private static class Node<T> {
+        private T data;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(T data) {
+            this.data = data;
+            this.next = null;
+            this.prev = null;
+        }
+    }
+
+    public DoublyLinkedList() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+
+    public void addFirst(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (isEmpty()) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+        size++;
+    }
+
+    public void addLast(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (isEmpty()) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    public void remove(T data) {
+        if (isEmpty()) {
+            return;
+        }
+
+        Node<T> current = head;
+        while (current != null && !current.data.equals(data)) {
+            current = current.next;
+        }
+
+        if (current == null) {
+            return; 
+        }
+
+        if (current == head) {
+            head = head.next;
+            if (head != null) {
+                head.prev = null;
+            }
+        } else if (current == tail) {
+            tail = tail.prev;
+            if (tail != null) {
+                tail.next = null;
+            }
+        } else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+        }
+
+        size--;
+    }
+
+    public boolean contains(T data) {
+        Node<T> current = head;
+        while (current != null) {
+            if (current.data.equals(data)) {
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public void printList() {
+        Node<T> current = head;
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        DoublyLinkedList<Integer> list = new DoublyLinkedList<>();
+        
+        list.addFirst(1);
+        list.addFirst(2);
+        list.addLast(3);
+        list.addLast(4);
+        
+        list.printList();
+        
+        System.out.println("List contains 3: " + list.contains(3));
+        System.out.println("List contains 5: " + list.contains(5));
+
+        list.remove(1);
+        list.printList();
+        
+        System.out.println("Size of the list: " + list.size()); 
+    }
+}
