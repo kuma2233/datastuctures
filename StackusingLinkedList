@@ -1,0 +1,63 @@
+public class StackLinkedList<T> {
+    private Node<T> top;
+    private int size;
+
+    private static class Node<T> {
+        private T data;
+        private Node<T> next;
+
+        public Node(T data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    public StackLinkedList() {
+        this.top = null;
+        this.size = 0;
+    }
+
+    public void push(T data) {
+        Node<T> newNode = new Node<>(data);
+        newNode.next = top;
+        top = newNode;
+        size++;
+    }
+
+    public T pop() {
+        if (isEmpty()) {
+            throw new RuntimeException("Stack is empty. Cannot pop.");
+        }
+        T data = top.data;
+        top = top.next;
+        size--;
+        return data;
+    }
+
+    public T peek() {
+        if (isEmpty()) {
+            throw new RuntimeException("Stack is empty. Cannot peek.");
+        }
+        return top.data;
+    }
+
+    public boolean isEmpty() {
+        return top == null;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public static void main(String[] args) {
+        StackLinkedList<Integer> stack = new StackLinkedList<>();
+        
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        
+        System.out.println("Popped: " + stack.pop()); 
+        System.out.println("Top element: " + stack.peek()); 
+        System.out.println("Stack size: " + stack.size()); 
+    }
+}
